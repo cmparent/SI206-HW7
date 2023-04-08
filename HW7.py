@@ -70,8 +70,8 @@ def make_players_table(data, cur, conn):
         nationality.append(player["nationality"])
 
     # print(ids, names, positions, birthdays, nationality)
-    cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT UNIQUE)")
-
+    # cur.execute("DROP TABLE IF EXISTS Players")
+    cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
 
     for pos in positions:
         # print(pos)
@@ -79,45 +79,18 @@ def make_players_table(data, cur, conn):
         # print(pos)
         pos_ids.append(cur.fetchone()[0])
 
-    # print(pos_ids)
+    # print(names)
 
     for i in range(len(ids)):
+        # print(ids[i], names[i])
         cur.execute("INSERT OR REPLACE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?, ?, ?, ?, ?)", 
                     (ids[i], names[i], pos_ids[i], birthdays[i], nationality[i]))
                     
+
     conn.commit()
 
 
 
-
-
-
-
-    # names = []
-    
-    
-    # for person in data["squad"]:
-    #     # print(person)
-    #     if person not in names:
-    #         names.append(person)
-    # # print(names)
-    
-    # for i in range(len(names)):
-    #     # print(names[i])
-    #     cur.execute("INSERT OR IGNORE INTO Players (id, name, birthyear, nationality) VALUES (?,?,?,?)",(names[i]["id"], names[i]["name"], names[i]["dateOfBirth"], names[i]["nationality"]))
-    # conn.commit()   
-
-    # cur.execute("SELECT * FROM Positions")
-
-    # for i in range(len(names)):
-    #     position = names[i]["position"]
-    #     # print(position)
-    #     for tup in cur:
-    #         print(tup)
-
-    # cur.execute("SELECT * FROM Positions")
-   
-    
 
 ## [TASK 2]: 10 points
 # Finish the function nationality_search
@@ -130,7 +103,23 @@ def make_players_table(data, cur, conn):
         # the player's name, their position_id, and their nationality.
 
 def nationality_search(countries, cur, conn):
-    pass
+
+    # print(countries)
+    lst_tups = []
+
+    for each in countries:
+        # print(each)
+        cur.execute("SELECT name, position_id, nationality FROM Players WHERE nationality = ?", (each,))
+        conn.commit()
+
+    for tup in cur:
+        lst_tups.append(tup)
+
+    return lst_tups 
+
+
+
+    # pass
 
 ## [TASK 3]: 10 points
 # finish the function birthyear_nationality_search
@@ -149,6 +138,14 @@ def nationality_search(countries, cur, conn):
 
 
 def birthyear_nationality_search(age, country, cur, conn):
+
+    print(type(country))
+
+
+
+
+
+
     pass
 
 ## [TASK 4]: 15 points
@@ -169,7 +166,9 @@ def birthyear_nationality_search(age, country, cur, conn):
     # HINT: You'll have to use JOIN for this task.
 
 def position_birth_search(position, age, cur, conn):
-       pass
+
+    pass
+
 
 
 # [EXTRA CREDIT]
@@ -225,36 +224,36 @@ class TestAllMethods(unittest.TestCase):
         self.conn2 = sqlite3.connect(path+'/'+'Football_seasons.db')
         self.cur2 = self.conn2.cursor()
 
-    # def test_players_table(self):
-    #     self.cur.execute('SELECT * from Players')
-    #     players_list = self.cur.fetchall()
+    def test_players_table(self):
+        self.cur.execute('SELECT * from Players')
+        players_list = self.cur.fetchall()
 
-    #     self.assertEqual(len(players_list), 30)
-    #     self.assertEqual(len(players_list[0]),5)
-    #     self.assertIs(type(players_list[0][0]), int)
-    #     self.assertIs(type(players_list[0][1]), str)
-    #     self.assertIs(type(players_list[0][2]), int)
-    #     self.assertIs(type(players_list[0][3]), int)
-    #     self.assertIs(type(players_list[0][4]), str)
+        self.assertEqual(len(players_list), 30)
+        self.assertEqual(len(players_list[0]),5)
+        self.assertIs(type(players_list[0][0]), int)
+        self.assertIs(type(players_list[0][1]), str)
+        self.assertIs(type(players_list[0][2]), int)
+        self.assertIs(type(players_list[0][3]), int)
+        self.assertIs(type(players_list[0][4]), str)
 
-    # def test_nationality_search(self):
-    #     x = sorted(nationality_search(['England'], self.cur, self.conn))
-    #     self.assertEqual(len(x), 11)
-    #     self.assertEqual(len(x[0]), 3)
-    #     self.assertEqual(x[0][0], "Aaron Wan-Bissaka")
+    def test_nationality_search(self):
+        x = sorted(nationality_search(['England'], self.cur, self.conn))
+        self.assertEqual(len(x), 11)
+        self.assertEqual(len(x[0]), 3)
+        self.assertEqual(x[0][0], "Aaron Wan-Bissaka")
 
-    #     y = sorted(nationality_search(['Brazil'], self.cur, self.conn))
-    #     self.assertEqual(len(y), 3)
-    #     self.assertEqual(y[2],('Fred', 2, 'Brazil'))
-    #     self.assertEqual(y[0][1], 3)
+        y = sorted(nationality_search(['Brazil'], self.cur, self.conn))
+        self.assertEqual(len(y), 3)
+        self.assertEqual(y[2],('Fred', 2, 'Brazil'))
+        self.assertEqual(y[0][1], 3)
 
-    # def test_birthyear_nationality_search(self):
+    def test_birthyear_nationality_search(self):
 
-    #     a = birthyear_nationality_search(24, 'England', self.cur, self.conn)
-    #     self.assertEqual(len(a), 7)
-    #     self.assertEqual(a[0][1], 'England')
-    #     self.assertEqual(a[3][2], 1992)
-    #     self.assertEqual(len(a[1]), 3)
+        a = birthyear_nationality_search(24, 'England', self.cur, self.conn)
+        self.assertEqual(len(a), 7)
+        self.assertEqual(a[0][1], 'England')
+        self.assertEqual(a[3][2], 1992)
+        self.assertEqual(len(a[1]), 3)
 
     # def test_type_speed_defense_search(self):
     #     b = sorted(position_birth_search('Goalkeeper', 35, self.cur, self.conn))
