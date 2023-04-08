@@ -2,7 +2,7 @@
 # Your name: Charlotte Parent  
 # Your student id: 8420 5830
 # Your email: cmparent@umich.edu
-# List who you have worked with on this project: None
+# List who you have worked with on this project: Serena Shen
 
 import unittest
 import sqlite3
