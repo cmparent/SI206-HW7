@@ -86,7 +86,6 @@ def make_players_table(data, cur, conn):
         cur.execute("INSERT OR REPLACE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?, ?, ?, ?, ?)", 
                     (ids[i], names[i], pos_ids[i], birthdays[i], nationality[i]))
                     
-
     conn.commit()
 
 
@@ -110,7 +109,8 @@ def nationality_search(countries, cur, conn):
     for each in countries:
         # print(each)
         cur.execute("SELECT name, position_id, nationality FROM Players WHERE nationality = ?", (each,))
-        conn.commit()
+    
+    conn.commit()
 
     for tup in cur:
         lst_tups.append(tup)
@@ -118,8 +118,6 @@ def nationality_search(countries, cur, conn):
     return lst_tups 
 
 
-
-    # pass
 
 ## [TASK 3]: 10 points
 # finish the function birthyear_nationality_search
@@ -146,6 +144,7 @@ def birthyear_nationality_search(age, country, cur, conn):
     # print(age)
 
     cur.execute("SELECT name, nationality, birthyear FROM Players WHERE birthyear < ? AND nationality = ?", (age, country))
+   
     for row in cur:
         lst_ages.append(row)
         # print(row)
@@ -180,12 +179,9 @@ def position_birth_search(position, age, cur, conn):
     
     for row in cur:
         lst_pos_birth.append(row)
-
         # print(row)
     
     return lst_pos_birth
-
-    
 
 # [EXTRA CREDIT]
 # You’ll make 3 new functions, make_winners_table(), make_seasons_table(),
@@ -222,14 +218,14 @@ def position_birth_search(position, age, cur, conn):
 #     they have won since the year passed, including the season that ended
 #     the passed year. 
 
-def make_winners_table(data, cur, conn):
-    pass
+# def make_winners_table(data, cur, conn):
+#     pass
 
-def make_seasons_table(data, cur, conn):
-    pass
+# def make_seasons_table(data, cur, conn):
+#     pass
 
-def winners_since_search(year, cur, conn):
-    pass
+# def winners_since_search(year, cur, conn):
+#     pass
 
 
 class TestAllMethods(unittest.TestCase):
