@@ -139,7 +139,7 @@ def nationality_search(countries, cur, conn):
 
 def birthyear_nationality_search(age, country, cur, conn):
 
-    print(type(country))
+    # print(country)
 
 
 
