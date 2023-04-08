@@ -69,8 +69,7 @@ def make_players_table(data, cur, conn):
         birthdays.append(int(player["dateOfBirth"][:4]))
         nationality.append(player["nationality"])
 
-    print(ids, names, positions, birthdays, nationality)
-
+    # print(ids, names, positions, birthdays, nationality)
     cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT UNIQUE)")
 
 
@@ -83,7 +82,7 @@ def make_players_table(data, cur, conn):
     # print(pos_ids)
 
     for i in range(len(ids)):
-        cur.execute("INSERT OR IGNORE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?, ?, ?, ?, ?)", 
+        cur.execute("INSERT OR REPLACE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?, ?, ?, ?, ?)", 
                     (ids[i], names[i], pos_ids[i], birthdays[i], nationality[i]))
                     
     conn.commit()
