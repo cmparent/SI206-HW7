@@ -150,7 +150,6 @@ def birthyear_nationality_search(age, country, cur, conn):
         lst_ages.append(row)
         # print(row)
 
-    # print(lst_ages)
     return lst_ages
 
 
@@ -173,7 +172,9 @@ def birthyear_nationality_search(age, country, cur, conn):
 
 def position_birth_search(position, age, cur, conn):
 
-    pass
+    cur.execute("SELECT y.name, y.position, y.birthyear FROM Players y JOIN Positions p ON y.position_id = p.id WHERE y.")
+
+    # pass
 
 
 
