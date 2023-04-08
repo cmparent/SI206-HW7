@@ -54,47 +54,71 @@ def make_positions_table(data, cur, conn):
 
 def make_players_table(data, cur, conn):
 
+    ids = []
     names = []
-    
-    
-    for person in data["squad"]:
-        # print(person)
-        if person not in names:
-            names.append(person)
-    # print(names)
+    positions = []
+    pos_ids = []
+    birthdays = []
+    nationality = []
+
+    for player in data["squad"]:
+        # print(player)
+        ids.append(player["id"])
+        names.append(player["name"])
+        positions.append(player["position"])
+        birthdays.append(int(player["dateOfBirth"][:4]))
+        nationality.append(player["nationality"])
+
+    print(ids, names, positions, birthdays, nationality)
+
     cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT UNIQUE)")
-    
-    for i in range(len(names)):
-        # print(names[i])
-        cur.execute("INSERT OR IGNORE INTO Players (id, name, birthyear, nationality) VALUES (?,?,?,?)",(names[i]["id"], names[i]["name"], names[i]["dateOfBirth"], names[i]["nationality"]))
-    conn.commit()   
 
-    cur.execute("SELECT * FROM Positions")
 
-    for i in range(len(names)):
-        position = names[i]["position"]
-        # print(position)
-        for tup in cur:
-            print(tup)
- 
-    
+    for pos in positions:
+        # print(pos)
+        cur.execute("SELECT id FROM Positions WHERE position = ?", (pos,))
+        # print(pos)
+        pos_ids.append(cur.fetchone()[0])
 
-    cur.execute("SELECT * FROM Positions")
-   
+    # print(pos_ids)
+
+    for i in range(len(ids)):
+        cur.execute("INSERT OR IGNORE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?, ?, ?, ?, ?)", 
+                    (ids[i], names[i], pos_ids[i], birthdays[i], nationality[i]))
+                    
+    conn.commit()
+
+
+
+
+
+
+
+    # names = []
     
-    # print(names)
+    
+    # for person in data["squad"]:
+    #     # print(person)
+    #     if person not in names:
+    #         names.append(person)
+    # # print(names)
+    
+    # for i in range(len(names)):
+    #     # print(names[i])
+    #     cur.execute("INSERT OR IGNORE INTO Players (id, name, birthyear, nationality) VALUES (?,?,?,?)",(names[i]["id"], names[i]["name"], names[i]["dateOfBirth"], names[i]["nationality"]))
+    # conn.commit()   
 
     # cur.execute("SELECT * FROM Positions")
 
+    # for i in range(len(names)):
+    #     position = names[i]["position"]
+    #     # print(position)
+    #     for tup in cur:
+    #         print(tup)
 
-    # for i in 
-    # "SELECT p.position, y."
-
+    # cur.execute("SELECT * FROM Positions")
    
-
-    # print(Positions)
-
-    # pass
+    
 
 ## [TASK 2]: 10 points
 # Finish the function nationality_search
